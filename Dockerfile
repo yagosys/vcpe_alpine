@@ -1,7 +1,7 @@
 
 FROM alpine
 
-MAINTAINER Markus Juenemann <markus@juenemann.net>
+MAINTAINER  yagosys@gmail.com
 
 #RUN apk add --no-cache sudo openrc iputils ca-certificates net-snmp-tools procps && \
     #update-ca-certificates
@@ -25,9 +25,9 @@ COPY polipo /usr/local/bin
 COPY ${CPE_VERSION} /vagrant
 COPY telegraf-${TELEGRAF_VERSION}-static_linux_amd64.tar.gz /vagrant/
 COPY glibc-2.27-r0.apk /vagrant
-COPY vcpe_conf.conf /vagrant
+#COPY vcpe_conf.conf /vagrant
 COPY polipo.conf /etc
-COPY run.sh /vagrant
+#COPY run.sh /vagrant
 COPY canalbox.conf /etc
 
 RUN tar xvf /vagrant/telegraf-${TELEGRAF_VERSION}-static_linux_amd64.tar.gz -C /usr/local/bin/ --strip-components 1 && \
