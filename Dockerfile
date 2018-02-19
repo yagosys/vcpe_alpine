@@ -117,9 +117,12 @@ RUN /bin/su -c "echo [program:vcpe-getconf] > /etc/supervisor/conf.d/getconf.con
 /bin/su -c "echo command=/usr/local/bin/frpc -c /etc/frpc.ini >>  /etc/supervisor/conf.d/vcpe-frpc.conf" && \
 /bin/su -c "echo autostart=true >>  /etc/supervisor/conf.d/vcpe-frpc.conf" && \
 /bin/su -c "echo startsecs=10 >>  /etc/supervisor/conf.d/vcpe-frpc.conf" && \
-/bin/su -c "echo user=root >>  /etc/supervisor/conf.d/vcpe-frpc.conf"
-
-
+/bin/su -c "echo user=root >>  /etc/supervisor/conf.d/vcpe-frpc.conf" && \
+/bin/su -c "echo [program:vcpe-ipsec] > /etc/supervisor/conf.d/vcpe-ipsec.conf" && \
+/bin/su -c "echo command=/usr/sbin/ipsec start --nofork >> /etc/supervisor/conf.d/vcpe-ipsec.conf" && \
+/bin/su -c "echo autostart=true >>  /etc/supervisor/conf.d/vcpe-ipsec.conf" && \
+/bin/su -c "echo startsecs=10 >>  /etc/supervisor/conf.d/vcpe-ipsec.conf" && \
+/bin/su -c "echo user=root >>  /etc/supervisor/conf.d/vcpe-ipsec.conf"
 
 
 
