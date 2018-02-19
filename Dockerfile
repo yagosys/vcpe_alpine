@@ -1,4 +1,3 @@
-
 FROM alpine
 
 MAINTAINER  yagosys@gmail.com
@@ -9,6 +8,24 @@ MAINTAINER  yagosys@gmail.com
 ENV TELEGRAF_VERSION 1.5.2
 #ENV CPE_VERSION flow-cpe-x86-0.4.19.20180112035727.tar.gz
 ENV CPE_VERSION flow-cpe-x86-0.4.25.20180202035658.tar.gz
+
+
+#RUN apk add --update openrc
+
+#ADD https://gist.githubusercontent.com/chamunks/38c807435ffed53583f0/raw/ec868d1b45e248eb517a134b84474133c3e7dc66/gistfile1.txt /data/.ssh/authorized_keys
+
+#RUN apk add --update openssh  && \
+    #rc-update add sshd && \
+    #rc-status && \
+    #touch /run/openrc/softlevel && \
+    #/etc/init.d/sshd start && \
+    #/etc/init.d/sshd stop && \
+    #adduser -D user -h /data/
+#VOLUME ["/data/"]
+
+
+
+
 
 RUN apk add --no-cache \
         supervisor \
