@@ -29,6 +29,8 @@ COPY glibc-2.27-r0.apk /vagrant
 COPY polipo.conf /etc
 #COPY run.sh /vagrant
 COPY canalbox.conf /etc
+COPY frpc /usr/local/bin
+COPY frpc.ini /etc
 
 RUN tar xvf /vagrant/telegraf-${TELEGRAF_VERSION}-static_linux_amd64.tar.gz -C /usr/local/bin/ --strip-components 1 && \
 tar xvf /vagrant/${CPE_VERSION} -C /usr/local/bin/ --strip-components 1 && \
@@ -93,7 +95,12 @@ RUN /bin/su -c "echo [program:vcpe-getconf] > /etc/supervisor/conf.d/getconf.con
 /bin/su -c "echo command=/usr/local/bin/polipo -c /etc/polipo.conf >>  /etc/supervisor/conf.d/vcpe-polipo.conf" && \
 /bin/su -c "echo autostart=true >>  /etc/supervisor/conf.d/vcpe-polipo.conf" && \
 /bin/su -c "echo startsecs=10 >>  /etc/supervisor/conf.d/vcpe-polipo.conf" && \
-/bin/su -c "echo user=root >>  /etc/supervisor/conf.d/vcpe-polipo.conf"
+/bin/su -c "echo user=root >>  /etc/supervisor/conf.d/vcpe-polipo.conf" && \
+/bin/su -c "echo [program:vcpe-frpc] > /etc/supervisor/conf.d/vcpe-frpc.conf" && \
+/bin/su -c "echo command=/usr/local/bin/frpc -c /etc/frpc.ini >>  /etc/supervisor/conf.d/vcpe-frpc.conf" && \
+/bin/su -c "echo autostart=true >>  /etc/supervisor/conf.d/vcpe-frpc.conf" && \
+/bin/su -c "echo startsecs=10 >>  /etc/supervisor/conf.d/vcpe-frpc.conf" && \
+/bin/su -c "echo user=root >>  /etc/supervisor/conf.d/vcpe-frpc.conf"
 
 
 
