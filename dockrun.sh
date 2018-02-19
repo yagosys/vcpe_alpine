@@ -2,11 +2,11 @@ docker stop vcpe1
 docker rm vcpe1
 #docker network create -d bridge --subnet 172.25.1.0/24 isolated_nw
 docker run -it -d --privileged -v /lib/modules:/lib/modules:ro -p 8123:8123 --env ROOT_PASSWORD=MyRootPW123 --env CANALBOX_SN=000010 --env CORE='127.0.0.1' --env FRP_SSH_PORT=6210 --env FRP_POLIPO_PORT=6310 --name vcpe1  interbeing/vcpe  
-docker exec -it vcpe1 bin/ash -c 'echo "$CANALBOX_SN" > /usr/local/etc/vnet/sn'
-docker exec -it vcpe1 bin/ash -c 'echo "$CORE" core >> /etc/hosts'
-docker exec -it vcpe1 bin/ash -c 'sed -i "s/6210/"$FRP_SSH_PORT"/g" /etc/frpc.ini'
-docker exec -it vcpe1 bin/ash -c 'sed -i "s/6310/"$FRP_POLIPO_PORT"/g" /etc/frpc.ini'
-docker exec -it vcpe1 bin/ash -c 'supervisord -c /etc/supervisord.conf '
+#docker exec -it vcpe1 bin/ash -c 'echo "$CANALBOX_SN" > /usr/local/etc/vnet/sn'
+#docker exec -it vcpe1 bin/ash -c 'echo "$CORE" core >> /etc/hosts'
+#docker exec -it vcpe1 bin/ash -c 'sed -i "s/6210/"$FRP_SSH_PORT"/g" /etc/frpc.ini'
+#docker exec -it vcpe1 bin/ash -c 'sed -i "s/6310/"$FRP_POLIPO_PORT"/g" /etc/frpc.ini'
+#docker exec -it vcpe1 bin/ash -c 'supervisord -c /etc/supervisord.conf '
 
 function get_vap(){
 vap=`docker exec -it vcpe1 bin/ash -c 'ipsec status' | grep ROUTED | awk '{print $1}'  | cut -d '{' -f 1`
