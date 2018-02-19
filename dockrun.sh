@@ -1,8 +1,8 @@
 docker stop vcpe1
 docker rm vcpe1
 docker run -it -d --privileged -v /lib/modules:/lib/modules:ro -p 8123:8123 --name vcpe1 interbeing/vcpe /bin/ash 
-docker exec -it vcpe1 bin/ash -c 'echo 'andy010' > /usr/local/etc/vnet/sn'
-docker exec -it vcpe1 bin/ash -c 'echo 120.55.58.18 core >> /etc/hosts'
+docker exec -it vcpe1 bin/ash -c 'echo 'input your sn' > /usr/local/etc/vnet/sn'
+docker exec -it vcpe1 bin/ash -c 'echo 127.0.0.1 core >> /etc/hosts'
 docker exec -it vcpe1 bin/ash -c 'supervisord -c /etc/supervisord.conf '
 docker exec -it vcpe1 bin/ash -c 'ipsec start'
 sleep 1
