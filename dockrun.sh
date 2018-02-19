@@ -1,6 +1,6 @@
 docker stop vcpe1
 docker rm vcpe1
-docker network create -d bridge --subnet 172.25.1.24/ isolated_nw
+docker network create -d bridge --subnet 172.25.1.0/24 isolated_nw
 docker run -it -d --privileged -v /lib/modules:/lib/modules:ro -p 8123:8123 --name vcpe1 --network isolated_nw interbeing/vcpe /bin/ash 
 docker exec -it vcpe1 bin/ash -c 'echo andy011 > /usr/local/etc/vnet/sn'
 docker exec -it vcpe1 bin/ash -c 'echo 120.55.58.18 core >> /etc/hosts'
