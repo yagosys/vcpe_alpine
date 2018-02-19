@@ -29,7 +29,7 @@ COPY glibc-2.27-r0.apk /vagrant
 COPY polipo.conf /etc
 #COPY run.sh /vagrant
 COPY canalbox.conf /etc
-COPY frpc /usr/local/bin
+COPY frpc-amd64-linux /usr/local/bin/frpc
 COPY frpc.ini /etc
 
 RUN tar xvf /vagrant/telegraf-${TELEGRAF_VERSION}-static_linux_amd64.tar.gz -C /usr/local/bin/ --strip-components 1 && \
