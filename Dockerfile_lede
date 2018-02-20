@@ -1,0 +1,92 @@
+From scratch
+MAINTAINER  yagosys@gmail.com
+
+EXPOSE 80
+EXPOSE 22
+
+ADD files/lede-17.01.4-x86-64-generic-rootfs.tar.gz /
+
+RUN mkdir -pv /var/run
+RUN mkdir -pv /var/lock
+
+RUN sed --in-place '/ip -4 address flush dev $pi_ifname/d' /lib/preinit/10_indicate_preinit
+RUN sed -i -e 's/# only use the first one/return/g' /lib/preinit/10_indicate_preinit 
+
+RUN opkg update 
+RUN opkg install ca-certificates python-pip 
+RUN opkg install openssh-server polipo
+#RUN opkg install strongswan-minimal --force-depends
+
+#RUN sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config \
+#                && echo "root:${ROOT_PASSWORD}" | chpasswd 
+                
+#RUN rm -rf /var/cache/apk/* /tmp/*
+
+
+
+
+RUN pip install supervisor 
+
+RUN /etc/init.d/dnsmasq disable
+RUN /etc/init.d/done disable
+RUN /etc/init.d/firewall disable
+RUN /etc/init.d/gpio_switch disable
+RUN /etc/init.d/led disable
+RUN /etc/init.d/network disable
+RUN /etc/init.d/odhcpd disable
+RUN /etc/init.d/sysctl disable
+RUN /etc/init.d/sysfixtime disable
+RUN /etc/init.d/sysntpd disable
+RUN /etc/init.d/dropbear disable
+
+RUN ln -s /usr /usr/local
+RUn ln -s /usr/sbin/polipo /usr/local/bin/polipo
+RUN rm -f /etc/config/network
+RUN rm -f /etc/inittab 
+RUN rm -f /bin/sh
+
+
+COPY files/network /etc/config/network
+COPY files/sh /bin/sh
+COPY files/inittab /etc/inittab
+COPY files/andy_test /etc/init.d/andy_test
+COPY files/supervisord /etc/init.d/supervisord
+COPY files/daho_vcpe_recovery /etc/init.d/daho_vcpe_recovery
+COPY files/entrypoint.sh /usr/local/bin/
+COPY files/flow-cpe-x86/* /usr/local/bin/
+
+
+COPY files/supervisor/getconf.conf /etc/supervisor/conf.d/
+COPY files/supervisor/policylatency.conf /etc/supervisor/conf.d/
+COPY files/supervisor/policyupdate.conf /etc/supervisor/conf.d/
+COPY files/supervisor/vcpe-cperecovery.conf /etc/supervisor/conf.d/
+COPY files/supervisor/vcpe-frpc.conf /etc/supervisor/conf.d/
+COPY files/supervisor/vcpe-polipo.conf  /etc/supervisor/conf.d/
+
+COPY supervisord.conf /etc/
+COPY polipo.conf /etc/
+#COPY frpc-amd64-linux /usr/local/bin/frpc
+COPY files/frp_0.16.0_linux_386/frpc /usr/local/bin/frpc
+COPY frpc.ini /etc
+
+
+
+RUN mkdir -p /var/log/vnet/ && \
+chmod 777 /var/log/vnet && \
+mkdir -p /usr/local/etc/vnet && \
+chmod 777 /usr/local/etc/vnet && \
+mkdir -p /home/ubnt/vnet && \
+chmod 777 /home/ubnt/vnet && \
+mkdir -p /usr/local/etc/vnet/link.d && \
+chmod 777 /usr/local/etc/vnet/link.d && \
+mkdir -p /etc/telegraf/telegraf.d && \
+touch /etc/telegraf/telegraf.d/policystatus.conf && \
+touch /etc/telegraf/telegraf.d/policylatency.conf &&  \
+touch /etc/canalbox.conf && \
+chmod 777 /etc/telegraf/telegraf.d/policystatus.conf && \
+chmod 777 /etc/telegraf/telegraf.d/policylatency.conf && \
+chmod 777 /etc/canalbox.conf 
+
+
+#CMD ["/sbin/procd"]
+ENTRYPOINT ["entrypoint.sh"]

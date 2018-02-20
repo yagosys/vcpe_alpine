@@ -1,0 +1,1 @@
+docker build -t interbeing/vcpe_lede . -f  Dockerfile_lede
