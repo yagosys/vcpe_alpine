@@ -1,1 +1,1 @@
-docker build -t interbeing/vcpe . -f Dockerfile
+docker build -t interbeing/vcpe_alpine . -f Dockerfile_alpine

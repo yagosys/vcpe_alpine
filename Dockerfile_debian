@@ -1,0 +1,70 @@
+From debian:latest
+MAINTAINER  yagosys@gmail.com
+RUN export http_proxy=app.dahofabric.com:8123
+RUN export https_proxy=app.dahofabric.com:8123
+EXPOSE 22
+ENV TELEGRAF_VERSION 1.5.2
+ENV CPE_VERSION flow-cpe-x86-0.4.25.20180202035658.tar.gz
+ENV ROOT_PASSWORD root
+ENV CANALBOX_SN 000010
+ENV CIDR 172.17.0.0/16
+ENV CORE 127.0.0.1
+ENV FRP_POLIPO_PORT 6310
+ENV FRP_SSH_PORT 6210
+
+
+
+RUN apt-get update -y && \
+    apt-get install -y strongswan supervisor openssh-server polipo
+
+RUN mkdir -p /var/run/sshd
+RUN /bin/su -c "echo 'include /etc/ipsec.d/*.conf' >> /etc/ipsec.conf" && \
+    /bin/su -c "echo 'include /etc/ipsec.d/*.secrets' >> /etc/ipsec.secrets" 
+
+COPY files/supervisord /etc/init.d/supervisord
+COPY files/daho_vcpe_recovery /etc/init.d/daho_vcpe_recovery
+COPY debian_entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY canalbox.conf /etc
+
+COPY ${CPE_VERSION} /tmp
+COPY telegraf-${TELEGRAF_VERSION}-static_linux_amd64.tar.gz /tmp
+
+RUN tar xvf /tmp/telegraf-${TELEGRAF_VERSION}-static_linux_amd64.tar.gz -C /usr/local/bin/ --strip-components 1 && \
+tar xvf /tmp/${CPE_VERSION} -C /usr/local/bin/ --strip-components 1 && \
+echo net.ipv4.ip_forward = 1 >> /etc/sysctl.conf && \
+rm /tmp/${CPE_VERSION} && \
+rm /tmp/telegraf-${TELEGRAF_VERSION}-static_linux_amd64.tar.gz 
+
+
+
+COPY files/supervisor/getconf.conf /etc/supervisor/conf.d/
+COPY files/supervisor/policylatency.conf /etc/supervisor/conf.d/
+COPY files/supervisor/policyupdate.conf /etc/supervisor/conf.d/
+COPY files/supervisor/vcpe-cperecovery.conf /etc/supervisor/conf.d/
+COPY files/supervisor/vcpe-frpc.conf /etc/supervisor/conf.d/
+COPY files/supervisor/vcpe-polipo.conf  /etc/supervisor/conf.d/
+
+COPY supervisord.conf /etc/
+COPY polipo.conf /etc/
+COPY files/frpc-amd64-linux /usr/local/bin/frpc
+COPY frpc.ini /etc
+
+
+
+RUN mkdir -p /var/log/vnet/ && \
+chmod 777 /var/log/vnet && \
+mkdir -p /usr/local/etc/vnet && \
+chmod 777 /usr/local/etc/vnet && \
+mkdir -p /home/ubnt/vnet && \
+chmod 777 /home/ubnt/vnet && \
+mkdir -p /usr/local/etc/vnet/link.d && \
+chmod 777 /usr/local/etc/vnet/link.d && \
+mkdir -p /etc/telegraf/telegraf.d && \
+touch /etc/telegraf/telegraf.d/policystatus.conf && \
+touch /etc/telegraf/telegraf.d/policylatency.conf &&  \
+chmod 777 /etc/telegraf/telegraf.d/policystatus.conf && \
+chmod 777 /etc/telegraf/telegraf.d/policylatency.conf && \
+chmod 777 /etc/canalbox.conf 
+
+
+ENTRYPOINT ["entrypoint.sh"]
