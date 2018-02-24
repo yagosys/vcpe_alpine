@@ -9,7 +9,7 @@ ENV CORE 127.0.0.1
 ENV FRP_POLIPO_PORT 6310
 ENV FRP_SSH_PORT 6210
 
-RUN apk --update --no-cache add openssh \
+RUN apk --update --no-cache add openssh sudo\
 		&& sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config \
 		&& echo "root:${ROOT_PASSWORD}" | chpasswd \
 		&& rm -rf /var/cache/apk/* /tmp/*
@@ -95,6 +95,7 @@ mkdir -p /etc/supervisor/conf.d
 
 RUN /bin/su -c "echo 'include /etc/ipsec.d/*.conf' >> /etc/ipsec.conf" && \
 /bin/su -c "echo 'include /etc/ipsec.d/*.secrets' >> /etc/ipsec.secrets" && \
+/bin/su -c "chmod 744 /etc/ipsec.secrets" && \
 /bin/su -c "echo 'files = /etc/supervisor/conf.d/*.conf' >> /etc/supervisord.conf" && \
 /bin/su -c "echo [program:vcpe-getconf] > /etc/supervisor/conf.d/getconf.conf" && \
 /bin/su -c "echo command=/usr/local/bin/getconf -ip core >>  /etc/supervisor/conf.d/getconf.conf" && \ 
@@ -132,7 +133,7 @@ RUN /bin/su -c "echo 'include /etc/ipsec.d/*.conf' >> /etc/ipsec.conf" && \
 /bin/su -c "echo startsecs=10 >>  /etc/supervisor/conf.d/vcpe-frpc.conf" && \
 /bin/su -c "echo user=root >>  /etc/supervisor/conf.d/vcpe-frpc.conf" && \
 /bin/su -c "echo [program:vcpe-ipsec] > /etc/supervisor/conf.d/vcpe-ipsec.conf" && \
-/bin/su -c "echo command=/usr/sbin/ipsec start --nofork >> /etc/supervisor/conf.d/vcpe-ipsec.conf" && \
+/bin/su -c "echo command=sudo /usr/sbin/ipsec start --nofork >> /etc/supervisor/conf.d/vcpe-ipsec.conf" && \
 /bin/su -c "echo autostart=true >>  /etc/supervisor/conf.d/vcpe-ipsec.conf" && \
 /bin/su -c "echo startsecs=10 >>  /etc/supervisor/conf.d/vcpe-ipsec.conf" && \
 /bin/su -c "echo user=root >>  /etc/supervisor/conf.d/vcpe-ipsec.conf"

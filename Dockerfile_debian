@@ -19,7 +19,8 @@ RUN apt-get update -y && \
 
 RUN mkdir -p /var/run/sshd
 RUN /bin/su -c "echo 'include /etc/ipsec.d/*.conf' >> /etc/ipsec.conf" && \
-    /bin/su -c "echo 'include /etc/ipsec.d/*.secrets' >> /etc/ipsec.secrets" 
+    /bin/su -c "echo 'include /etc/ipsec.d/*.secrets' >> /etc/ipsec.secrets"  && \
+    /bin/su -c "chmod 744 /etc/ipsec.secrets" 
 
 COPY files/supervisord /etc/init.d/supervisord
 COPY files/daho_vcpe_recovery /etc/init.d/daho_vcpe_recovery
@@ -43,6 +44,8 @@ COPY files/supervisor/policyupdate.conf /etc/supervisor/conf.d/
 COPY files/supervisor/vcpe-cperecovery.conf /etc/supervisor/conf.d/
 COPY files/supervisor/vcpe-frpc.conf /etc/supervisor/conf.d/
 COPY files/supervisor/vcpe-polipo.conf  /etc/supervisor/conf.d/
+COPY files/supervisor/vcpe-ipsec.conf   /etc/supervisor/conf.d/
+COPY files/supervisor/ipsecping.conf    /etc/supervisor/conf.d/
 
 COPY supervisord.conf /etc/
 COPY polipo.conf /etc/
