@@ -51,7 +51,7 @@ COPY files/sh /bin/sh
 COPY files/inittab /etc/inittab
 COPY files/andy_test /etc/init.d/andy_test
 COPY files/supervisord /etc/init.d/supervisord
-COPY files/daho_vcpe_recovery /etc/init.d/daho_vcpe_recovery
+#COPY files/daho_vcpe_recovery /etc/init.d/daho_vcpe_recovery
 COPY files/entrypoint.sh /usr/local/bin/
 COPY files/flow-cpe-x86/* /usr/local/bin/
 
