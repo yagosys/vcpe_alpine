@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.15
 MAINTAINER  yagosys@gmail.com
 ENV TELEGRAF_VERSION 1.5.2
 ENV CPE_VERSION flow-cpe-x86-0.4.25.20180202035658.tar.gz
