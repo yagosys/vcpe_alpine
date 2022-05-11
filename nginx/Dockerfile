@@ -1,4 +1,4 @@
-From debian:latest
+From debian:11
 MAINTAINER  yagosys@gmail.com
 EXPOSE 22 80
 RUN apt-get update -y && \
